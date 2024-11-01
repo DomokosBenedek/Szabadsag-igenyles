@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Szabadság Igénylés</title>
+  <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container mt-5">
+        <h2>Szabadság Igénylés</h2>
+        
+        <% for(let err of errors) {%>
+            <p style="color: red;"><%= err %></p>
+          <% } %>
+
+    <form action="/submit-request" method="POST" novalidate>
+      <div class="form-group">
+        <label for="name">Név</label>
+        <input type="text" class="form-control" id="name" name="name" value="<%= formData?.name %>" required>
+      </div>
+
+      <div class="form-group">
+        <label for="startDate">Kezdő dátum</label>
+        <input type="date" class="form-control" id="startDate" name="startDate" value="<%= formData?.startDate %>" required>
+      </div>
+
+      <div class="form-group">
+        <label for="endDate">Vég dátum</label>
+        <input type="date" class="form-control" id="endDate" name="endDate" value="<%= formData?.endDate %>" required>
+      </div>
+
+      <div class="form-check">
+        <input type="checkbox" class="form-check-input" id="paidLeave" name="paidLeave" <%= formData?.paidLeave ? 'checked' : '' %>>
+        <label class="form-check-label" for="paidLeave">Fizetett szabadság</label>
+      </div>
+
+      <div class="form-group">
+        <label for="employeeId">Alkalmazott azonosító</label>
+        <input type="text" class="form-control" id="employeeId" name="employeeId" pattern="[A-Z]{3}-[1-9]{3}" value="<%= formData?.employeeId %>" required>
+        <small class="form-text text-muted">Formátum: BBB-SSS</small>
+      </div>
+
+      <div class="form-group">
+        <label for="reason">Indoklás</label>
+        <textarea class="form-control" id="reason" name="reason" rows="4" minlength="30" required><%= formData?.reason %></textarea>
+      </div>
+
+      <button type="submit" class="btn btn-primary">Igénylés küldése</button>
+    </form>
+  </div>
+
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>
