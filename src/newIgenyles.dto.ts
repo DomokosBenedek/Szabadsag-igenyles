@@ -1,4 +1,4 @@
-import { IsBoolean, IsDateString, IsNotEmpty, IsOptional, IsString, Matches, MinLength } from 'class-validator';
+import { IsBoolean, IsDateString, IsNotEmpty, IsOptional, isString, IsString, Matches, MinLength } from 'class-validator';
 
 export class NewIgenylesDto {
   @IsNotEmpty({ message: 'A név mező kitöltése kötelező!' })
@@ -14,12 +14,11 @@ export class NewIgenylesDto {
   endDate: string;
 
   @IsOptional()
-  @IsBoolean()
-  paidLeave?: boolean;
+  paidLeave?: string;
 
   @IsNotEmpty({ message: 'Az alkalmazott azonosító kitöltése kötelező!' })
   @Matches(/^[A-Z]{3}-[1-9]{3}$/, { message: 'Az alkalmazott azonosító formátuma hibás! (Pl.: BBB-123)' })
-  employeId: string;
+  employeeId: string;
 
   @IsNotEmpty({ message: 'Az indoklás mező kitöltése kötelező!' })
   @IsString()

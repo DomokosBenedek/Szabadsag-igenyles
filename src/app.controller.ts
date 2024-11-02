@@ -2,6 +2,7 @@ import { Body, Controller, Get, Post, Render, Res } from '@nestjs/common';
 import { AppService } from './app.service';
 import { NewIgenylesDto } from './newIgenyles.dto';
 import { Response } from 'express';
+import { IgenylesDto } from './Igenyles.dto';
 
 
 @Controller()
@@ -16,14 +17,21 @@ export class AppController {
     };
   }
 
-  private requests = [];
+  requests = [];
 
   @Get('newKerelem')
   @Render('newKerelemForm')
     getKerelmek(){
       return{  
-        errors: {}, 
-        formData: {} };
+        errors: [], 
+        formData: {
+          name: "",
+          startDate: "",
+          endDate: "",
+          paidLeave: false,
+          employeId: "",
+          reason: "",
+          }};
     }
   
   
@@ -34,21 +42,23 @@ export class AppController {
     @Body() IgenylesData: NewIgenylesDto, 
     @Res() response: Response) {
     const errors: string[] = [];
+    console.log(IgenylesData)
 
-    const newIgenyles = {
-        name: IgenylesData.name,
-        startDate: IgenylesData.startDate,
-        endDate: IgenylesData.endDate,
-        paidLeave:IgenylesData.paidLeave,
-        employeId: IgenylesData.employeId,
-        reason: IgenylesData.reason
-      }
+    const newIgenyles:IgenylesDto = {
+      name: IgenylesData.name,
+      startDate: IgenylesData.startDate,
+      endDate: IgenylesData.endDate,
+      paidLeave: IgenylesData.paidLeave === "true",
+      employeeId: IgenylesData.employeeId,
+      reason: IgenylesData.reason
+    }
+    console.log(newIgenyles)
 
-    if (!IgenylesData.name || !IgenylesData.startDate || !IgenylesData.endDate || !IgenylesData.employeId || !IgenylesData.reason) {
+    if (!IgenylesData.name || !IgenylesData.startDate || !IgenylesData.endDate || !IgenylesData.employeeId || !IgenylesData.reason) {
       errors.push('Minden (*) kötelező mezőt meg kell adni!');
     }
-
-    if (!/^[A-Z]{3}-[1-9]{3}$/.test(newIgenyles.employeId)) {
+    console.log(newIgenyles.employeeId)
+    if (!/^[A-Z]{3}-[1-9]{3}$/.test(newIgenyles.employeeId)) {
       errors.push('Az alkalmazott azonosító nem megfelelő formátumú! (BBB-SSS)');
     }
 
@@ -63,9 +73,9 @@ export class AppController {
     if(errors.length > 0){
       response.render('newKerelemForm', {
         errors,
-        data: IgenylesData
+        formData: IgenylesData
       })
-      return;
+      return errors;  
     }
 
     this.requests.push(IgenylesData);
